@@ -12,10 +12,12 @@ Save and resume long-running Codex tasks across conversations while preserving t
 
 - `SKILL.md`: skill instructions and operating rules.
 - `agents/openai.yaml`: Codex agent metadata.
+- `docs/install.md`: detailed installation, verification, and update guide.
 - `examples/`: sanitized example handoffs for common continuation scenarios.
 - `references/handoff-schema.md`: expected handoff Markdown and JSON structure.
 - `scripts/create_handoff.py`: create or update a handoff.
 - `scripts/list_handoffs.py`: list saved handoffs.
+- `scripts/make_resume_prompt.py`: generate a prompt for resuming a handoff in a new conversation.
 - `scripts/sanitize_handoff.py`: scan handoff files for secrets and environment-specific data.
 - `scripts/validate_handoff.py`: validate a handoff before relying on it.
 - `tests/`: dependency-free unit tests for the helper scripts.
@@ -29,6 +31,8 @@ Clone or copy this repository into your Codex skills directory as:
 ```
 
 Restart Codex or reload skills if your Codex environment requires it.
+
+For detailed setup and verification, see [docs/install.md](docs/install.md).
 
 ## Why This Exists
 
@@ -68,6 +72,12 @@ Or point to a specific handoff:
 
 ```text
 Use cc-continue-task to resume .codex/handoffs/my-task/latest.md.
+```
+
+You can also generate a ready-to-paste resume prompt:
+
+```powershell
+python scripts/make_resume_prompt.py .codex/handoffs/my-task
 ```
 
 ## Objective Continuity
@@ -113,6 +123,12 @@ List handoffs:
 python scripts/list_handoffs.py --workspace .
 ```
 
+Generate a prompt for a new conversation:
+
+```powershell
+python scripts/make_resume_prompt.py .codex/handoffs/refactor-cli-parser
+```
+
 Validate a handoff:
 
 ```powershell
@@ -144,7 +160,7 @@ The `examples/` directory contains sanitized fictional handoffs:
 Run the local checks with the Python standard library:
 
 ```powershell
-python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/validate_handoff.py scripts/sanitize_handoff.py
+python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/make_resume_prompt.py scripts/validate_handoff.py scripts/sanitize_handoff.py
 python -m unittest discover -s tests
 python scripts/sanitize_handoff.py examples
 ```

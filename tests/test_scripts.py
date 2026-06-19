@@ -10,6 +10,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CREATE_HANDOFF = REPO_ROOT / "scripts" / "create_handoff.py"
+MAKE_RESUME_PROMPT = REPO_ROOT / "scripts" / "make_resume_prompt.py"
 VALIDATE_HANDOFF = REPO_ROOT / "scripts" / "validate_handoff.py"
 SANITIZE_HANDOFF = REPO_ROOT / "scripts" / "sanitize_handoff.py"
 
@@ -66,6 +67,13 @@ class HandoffScriptTests(unittest.TestCase):
 
             validate = run_script(str(VALIDATE_HANDOFF), str(handoff_dir))
             self.assertEqual(validate.returncode, 0, validate.stdout)
+
+            prompt = run_script(str(MAKE_RESUME_PROMPT), str(handoff_dir))
+            self.assertEqual(prompt.returncode, 0, prompt.stdout)
+            self.assertIn("Use cc-continue-task to resume this handoff:", prompt.stdout)
+            self.assertIn("Original objective: Finish the demo task and verify the result.", prompt.stdout)
+            self.assertIn("Objective source: user_specified", prompt.stdout)
+            self.assertIn("1. Validate generated handoff.", prompt.stdout)
 
     def test_validate_rejects_missing_required_section(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

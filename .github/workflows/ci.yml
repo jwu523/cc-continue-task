@@ -18,7 +18,7 @@ jobs:
           python-version: "3.x"
 
       - name: Compile scripts
-        run: python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/validate_handoff.py scripts/sanitize_handoff.py
+        run: python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/make_resume_prompt.py scripts/validate_handoff.py scripts/sanitize_handoff.py
 
       - name: Run tests
         run: python -m unittest discover -s tests

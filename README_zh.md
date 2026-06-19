@@ -12,10 +12,12 @@
 
 - `SKILL.md`：skill 说明和操作规则。
 - `agents/openai.yaml`：Codex agent 元数据。
+- `docs/install.md`：详细安装、验证和更新说明。
 - `examples/`：脱敏后的示例 handoff，覆盖常见继续任务场景。
 - `references/handoff-schema.md`：handoff Markdown 和 JSON 的结构说明。
 - `scripts/create_handoff.py`：创建或更新 handoff。
 - `scripts/list_handoffs.py`：列出已保存的 handoff。
+- `scripts/make_resume_prompt.py`：为新对话生成恢复提示。
 - `scripts/sanitize_handoff.py`：扫描 handoff 中的密钥和环境相关信息。
 - `scripts/validate_handoff.py`：在恢复或共享前校验 handoff。
 - `tests/`：不依赖第三方包的辅助脚本测试。
@@ -29,6 +31,8 @@
 ```
 
 如果你的 Codex 环境需要重新加载 skills，请重启 Codex 或执行对应的 reload 操作。
+
+详细安装和验证流程见 [docs/install.md](docs/install.md)。
 
 ## 为什么需要它
 
@@ -68,6 +72,12 @@ Use cc-continue-task to resume the latest handoff for this workspace.
 
 ```text
 Use cc-continue-task to resume .codex/handoffs/my-task/latest.md.
+```
+
+保存 handoff 后，也可以先生成一段可直接复制到新对话的恢复提示：
+
+```powershell
+python scripts/make_resume_prompt.py .codex/handoffs/my-task
 ```
 
 ## 目标连续性
@@ -113,6 +123,12 @@ python scripts/create_handoff.py `
 python scripts/list_handoffs.py --workspace .
 ```
 
+为新对话生成恢复提示：
+
+```powershell
+python scripts/make_resume_prompt.py .codex/handoffs/refactor-cli-parser
+```
+
 校验 handoff：
 
 ```powershell
@@ -144,7 +160,7 @@ python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser --redact-
 使用 Python 标准库即可运行本地检查：
 
 ```powershell
-python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/validate_handoff.py scripts/sanitize_handoff.py
+python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/make_resume_prompt.py scripts/validate_handoff.py scripts/sanitize_handoff.py
 python -m unittest discover -s tests
 python scripts/sanitize_handoff.py examples
 ```
