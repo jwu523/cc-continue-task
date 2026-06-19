@@ -1,6 +1,7 @@
 # CC Continue Task Skill
 
 Save and resume long-running Codex tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads. | 为长时间 Codex 任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。
+
 [Quick Start](#install) · [Usage](#usage) · [简体中文](README_zh.md)
 
 `cc-continue-task` is a Codex skill for checkpointing work that spans multiple conversations. It writes a durable handoff artifact to disk so a new conversation can continue from verified task state instead of relying on a long chat transcript.
