@@ -1,5 +1,7 @@
 # CC Continue Task Skill
 
+[![CI](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml/badge.svg)](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml)
+
 Save and resume long-running Codex tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads. | 为长时间 Codex 任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。
 
 [Quick Start](#install) · [Usage](#usage) · [简体中文](README_zh.md)
@@ -10,10 +12,13 @@ Save and resume long-running Codex tasks across conversations while preserving t
 
 - `SKILL.md`: skill instructions and operating rules.
 - `agents/openai.yaml`: Codex agent metadata.
+- `examples/`: sanitized example handoffs for common continuation scenarios.
 - `references/handoff-schema.md`: expected handoff Markdown and JSON structure.
 - `scripts/create_handoff.py`: create or update a handoff.
 - `scripts/list_handoffs.py`: list saved handoffs.
+- `scripts/sanitize_handoff.py`: scan handoff files for secrets and environment-specific data.
 - `scripts/validate_handoff.py`: validate a handoff before relying on it.
+- `tests/`: dependency-free unit tests for the helper scripts.
 
 ## Install
 
@@ -114,9 +119,43 @@ Validate a handoff:
 python scripts/validate_handoff.py .codex/handoffs/refactor-cli-parser --check-files
 ```
 
+Scan a handoff before sharing it:
+
+```powershell
+python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser
+```
+
+Create redacted copies:
+
+```powershell
+python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser --redact-to redacted-handoffs
+```
+
+## Examples
+
+The `examples/` directory contains sanitized fictional handoffs:
+
+- `examples/basic/`: a normal checkpoint with a user-specified objective.
+- `examples/generated-objective/`: a checkpoint where Codex generated the objective.
+- `examples/objective-drift/`: a resumed task that should split into a new handoff because it drifted from the original objective.
+
+## Quality Checks
+
+Run the local checks with the Python standard library:
+
+```powershell
+python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/validate_handoff.py scripts/sanitize_handoff.py
+python -m unittest discover -s tests
+python scripts/sanitize_handoff.py examples
+```
+
+GitHub Actions runs the same checks on push and pull requests.
+
 ## Privacy And Sanitization
 
 Handoff files may contain local paths, command output, issue details, or operational context. Before publishing, sharing, or attaching generated handoffs, review them for secrets and environment-specific data.
+
+Use `scripts/sanitize_handoff.py` as a first pass before sharing a handoff. It reports likely credentials, private keys, local user paths, and private network addresses without printing the original secret value.
 
 This repository should contain the skill and helper scripts only. Do not commit generated `.codex/handoffs/` data, local caches, credentials, tokens, or private project notes.
 

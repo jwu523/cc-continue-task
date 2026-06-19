@@ -1,6 +1,9 @@
 # CC Continue Task Skill
 
+[![CI](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml/badge.svg)](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml)
+
 为长时间 Codex 任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。 | Save and resume long-running Codex tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads.
+
 [快速开始](#安装) · [使用方式](#使用方式) · [English](README.md)
 
 `cc-continue-task` 是一个 Codex skill，用来给跨多轮对话的大任务保存检查点。它会把可验证的任务状态写入本地 handoff 文件，让新对话可以从明确的状态继续，而不是依赖一整段很长的历史聊天记录。
@@ -9,10 +12,13 @@
 
 - `SKILL.md`：skill 说明和操作规则。
 - `agents/openai.yaml`：Codex agent 元数据。
+- `examples/`：脱敏后的示例 handoff，覆盖常见继续任务场景。
 - `references/handoff-schema.md`：handoff Markdown 和 JSON 的结构说明。
 - `scripts/create_handoff.py`：创建或更新 handoff。
 - `scripts/list_handoffs.py`：列出已保存的 handoff。
+- `scripts/sanitize_handoff.py`：扫描 handoff 中的密钥和环境相关信息。
 - `scripts/validate_handoff.py`：在恢复或共享前校验 handoff。
+- `tests/`：不依赖第三方包的辅助脚本测试。
 
 ## 安装
 
@@ -113,9 +119,43 @@ python scripts/list_handoffs.py --workspace .
 python scripts/validate_handoff.py .codex/handoffs/refactor-cli-parser --check-files
 ```
 
+共享前扫描 handoff：
+
+```powershell
+python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser
+```
+
+生成脱敏副本：
+
+```powershell
+python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser --redact-to redacted-handoffs
+```
+
+## 示例
+
+`examples/` 目录包含完全虚构、已脱敏的 handoff 示例：
+
+- `examples/basic/`：用户明确指定目标的普通检查点。
+- `examples/generated-objective/`：用户未指定目标，由 Codex 根据对话生成目标。
+- `examples/objective-drift/`：恢复后的任务偏离原始目标，应建议另存为新 handoff。
+
+## 质量检查
+
+使用 Python 标准库即可运行本地检查：
+
+```powershell
+python -m py_compile scripts/create_handoff.py scripts/list_handoffs.py scripts/validate_handoff.py scripts/sanitize_handoff.py
+python -m unittest discover -s tests
+python scripts/sanitize_handoff.py examples
+```
+
+GitHub Actions 会在 push 和 pull request 时运行同样的检查。
+
 ## 隐私与脱敏
 
 handoff 文件可能包含本地路径、命令输出、问题细节或运行环境信息。在发布、共享或附加生成的 handoff 前，需要先检查是否包含密钥、账号、内部路径或私有项目内容。
+
+可以先用 `scripts/sanitize_handoff.py` 做第一轮扫描。它会报告疑似凭据、私钥、本地用户路径和私有网络地址，并避免把原始秘密值直接打印出来。
 
 这个仓库只应包含 skill 和辅助脚本。不要提交生成的 `.codex/handoffs/` 数据、本地缓存、凭据、token 或私有项目笔记。
 
