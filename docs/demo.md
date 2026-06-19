@@ -4,7 +4,7 @@ This demo shows the intended workflow: save a compact handoff, start a new conve
 
 ## 1. Save A Handoff
 
-During a long-running task, ask Codex:
+During a long-running task, ask your AI coding agent:
 
 ```text
 Use cc-continue-task to save this task.
@@ -30,9 +30,9 @@ Report objective drift or stale state before continuing.
 
 ## 2. Start A New Conversation
 
-Open a new Codex conversation and paste the generated resume prompt.
+Open a new agent conversation and paste the generated resume prompt.
 
-Codex should:
+The agent should:
 
 - read `latest.md`
 - follow the `Context Loading Plan`

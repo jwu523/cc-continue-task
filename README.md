@@ -2,16 +2,18 @@
 
 [![CI](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml/badge.svg)](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml)
 
-Save and resume long-running Codex tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads. | 为长时间 Codex 任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。
+Save and resume long-running AI coding-agent tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads. | 为长时间 AI 编程代理任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。
 
 [Quick Start](#install) · [Usage](#usage) · [简体中文](README_zh.md)
 
-`cc-continue-task` is a Codex skill for checkpointing work that spans multiple conversations. It writes a durable handoff artifact to disk so a new conversation can continue from verified task state instead of relying on a long chat transcript.
+`cc-continue-task` is a continuation workflow for checkpointing AI coding-agent work that spans multiple conversations. It is packaged as a Codex skill, but the handoff format and helper scripts are usable with Codex, Claude Code, OpenCode, and similar file-oriented coding agents.
+
+It writes a durable handoff artifact to disk so a new conversation can continue from verified task state instead of relying on a long chat transcript.
 
 ## Repository Layout
 
 - `SKILL.md`: skill instructions and operating rules.
-- `agents/openai.yaml`: Codex agent metadata.
+- `agents/openai.yaml`: Codex skill UI metadata.
 - `CHANGELOG.md`: release history.
 - `CONTRIBUTING.md`: contribution guidelines.
 - `docs/install.md`: detailed installation, verification, and update guide.
@@ -30,19 +32,20 @@ Save and resume long-running Codex tasks across conversations while preserving t
 
 - [Install Guide](docs/install.md)
 - [Demo Workflow](docs/demo.md)
-- [Release Notes](docs/releases/v0.1.0.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security Policy](SECURITY.md)
 
 ## Install
 
-Clone or copy this repository into your Codex skills directory as:
+For Codex, clone or copy this repository into your Codex skills directory as:
 
 ```text
 <CODEX_HOME>/skills/cc-continue-task
 ```
 
 Restart Codex or reload skills if your Codex environment requires it.
+
+For other agents, use the handoff schema and helper scripts directly from the repository, or adapt `SKILL.md` into that agent's custom-instruction or workflow format.
 
 For detailed setup and verification, see [docs/install.md](docs/install.md).
 
@@ -61,7 +64,7 @@ This skill bridges that gap by saving only the state needed to continue:
 
 ## Usage
 
-Ask Codex to save a handoff when a task reaches a useful checkpoint:
+Ask your agent to save a handoff when a task reaches a useful checkpoint:
 
 ```text
 Use cc-continue-task to save this task.
@@ -113,7 +116,7 @@ By default, handoffs are written under the current workspace:
   checkpoints/
 ```
 
-`latest.md` is optimized for a human and a future Codex conversation. `handoff.json` is an indexable summary for tooling. `checkpoints/` preserves older Markdown snapshots.
+`latest.md` is optimized for a human and a future agent conversation. `handoff.json` is an indexable summary for tooling. `checkpoints/` preserves older Markdown snapshots.
 
 ## Script Examples
 
@@ -168,7 +171,7 @@ python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser --redact-
 The `examples/` directory contains sanitized fictional handoffs:
 
 - `examples/basic/`: a normal checkpoint with a user-specified objective.
-- `examples/generated-objective/`: a checkpoint where Codex generated the objective.
+- `examples/generated-objective/`: a checkpoint where the agent generated the objective.
 - `examples/objective-drift/`: a resumed task that should split into a new handoff because it drifted from the original objective.
 
 ## Quality Checks

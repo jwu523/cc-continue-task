@@ -78,7 +78,7 @@ Section guidance:
 - `Open Questions`: questions that need user input or further inspection.
 - `User Constraints`: explicit user instructions, boundaries, preferences, or prohibited actions.
 - `Compression Intent`: what to preserve, what to intentionally drop, and what to revalidate because it can drift.
-- `Resume Instructions`: the minimal verification and action sequence for the next Codex conversation.
+- `Resume Instructions`: the minimal verification and action sequence for the next AI coding-agent conversation.
 
 ## JSON Metadata
 
@@ -120,14 +120,14 @@ Section guidance:
 A useful handoff lets a new conversation answer these questions within one minute:
 
 - What is the user trying to finish?
-- Did the user state the objective directly, or did Codex generate it?
+- Did the user state the objective directly, or did the agent generate it?
 - Is the current state still aligned with the original objective?
 - What has already been done?
 - What files, commands, and facts are trustworthy?
 - What should be read immediately, deferred, or avoided?
 - What must not be changed or assumed?
 - What information was intentionally compressed away?
-- What should Codex do next?
+- What should the agent do next?
 
 Avoid these failure modes:
 

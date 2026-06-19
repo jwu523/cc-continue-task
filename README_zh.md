@@ -2,16 +2,18 @@
 
 [![CI](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml/badge.svg)](https://github.com/jwu523/cc-continue-task/actions/workflows/ci.yml)
 
-为长时间 Codex 任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。 | Save and resume long-running Codex tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads.
+为长时间 AI 编程代理任务保存和恢复可继续执行的状态，保持目标一致，控制 token 消耗，降低幻觉风险，并避免重复加载项目上下文。 | Save and resume long-running AI coding-agent tasks across conversations while preserving the objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads.
 
 [快速开始](#安装) · [使用方式](#使用方式) · [English](README.md)
 
-`cc-continue-task` 是一个 Codex skill，用来给跨多轮对话的大任务保存检查点。它会把可验证的任务状态写入本地 handoff 文件，让新对话可以从明确的状态继续，而不是依赖一整段很长的历史聊天记录。
+`cc-continue-task` 是一个面向 AI 编程代理的任务延续工作流，用来给跨多轮对话的大任务保存检查点。它以 Codex skill 的形式打包，但 handoff 格式和辅助脚本同样可用于 Codex、Claude Code、OpenCode 以及类似的文件型编程代理。
+
+它会把可验证的任务状态写入本地 handoff 文件，让新对话可以从明确的状态继续，而不是依赖一整段很长的历史聊天记录。
 
 ## 仓库结构
 
 - `SKILL.md`：skill 说明和操作规则。
-- `agents/openai.yaml`：Codex agent 元数据。
+- `agents/openai.yaml`：Codex skill UI 元数据。
 - `CHANGELOG.md`：版本变更记录。
 - `CONTRIBUTING.md`：贡献说明。
 - `docs/install.md`：详细安装、验证和更新说明。
@@ -30,19 +32,20 @@
 
 - [安装说明](docs/install.md)
 - [演示流程](docs/demo.md)
-- [Release Notes](docs/releases/v0.1.0.md)
 - [贡献说明](CONTRIBUTING.md)
 - [安全策略](SECURITY.md)
 
 ## 安装
 
-将本仓库 clone 或复制到你的 Codex skills 目录：
+对于 Codex，将本仓库 clone 或复制到你的 Codex skills 目录：
 
 ```text
 <CODEX_HOME>/skills/cc-continue-task
 ```
 
 如果你的 Codex 环境需要重新加载 skills，请重启 Codex 或执行对应的 reload 操作。
+
+对于其他代理，可以直接使用本仓库的 handoff schema 和辅助脚本，或者把 `SKILL.md` 改写到对应工具的自定义指令或工作流格式中。
 
 详细安装和验证流程见 [docs/install.md](docs/install.md)。
 
@@ -61,7 +64,7 @@
 
 ## 使用方式
 
-当任务到达一个适合保存的节点时，可以让 Codex 保存 handoff：
+当任务到达一个适合保存的节点时，可以让你的代理保存 handoff：
 
 ```text
 Use cc-continue-task to save this task.
@@ -113,7 +116,7 @@ skill 会同时记录当前 `Objective` 和稳定的 `Original Objective`。
   checkpoints/
 ```
 
-`latest.md` 适合人和后续 Codex 对话阅读。`handoff.json` 是便于工具索引的摘要。`checkpoints/` 用来保存历史 Markdown 快照。
+`latest.md` 适合人和后续代理对话阅读。`handoff.json` 是便于工具索引的摘要。`checkpoints/` 用来保存历史 Markdown 快照。
 
 ## 脚本示例
 
@@ -168,7 +171,7 @@ python scripts/sanitize_handoff.py .codex/handoffs/refactor-cli-parser --redact-
 `examples/` 目录包含完全虚构、已脱敏的 handoff 示例：
 
 - `examples/basic/`：用户明确指定目标的普通检查点。
-- `examples/generated-objective/`：用户未指定目标，由 Codex 根据对话生成目标。
+- `examples/generated-objective/`：用户未指定目标，由代理根据对话生成目标。
 - `examples/objective-drift/`：恢复后的任务偏离原始目标，应建议另存为新 handoff。
 
 ## 质量检查

@@ -28,7 +28,7 @@ What happened instead?
 
 - OS:
 - Python version:
-- Codex environment:
+- Agent/tool environment:
 - `cc-continue-task` version or commit:
 
 ## Relevant Command Output

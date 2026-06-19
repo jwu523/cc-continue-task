@@ -10,7 +10,7 @@ from typing import Any
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Generate a resume prompt for a Codex task handoff.")
+    p = argparse.ArgumentParser(description="Generate a resume prompt for an AI coding-agent task handoff.")
     p.add_argument("handoff", help="Path to a handoff directory, latest.md, or handoff.json.")
     p.add_argument("--json", action="store_true", help="Print prompt data as JSON.")
     p.add_argument("--no-next-steps", action="store_true", help="Do not include next steps from handoff.json.")

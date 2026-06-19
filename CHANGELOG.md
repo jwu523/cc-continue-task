@@ -2,11 +2,11 @@
 
 ## v0.1.0 - 2026-06-20
 
-Initial public release.
+Initial public version.
 
 ### Added
 
-- Codex skill instructions for saving and resuming long-running task handoffs.
+- Agent-agnostic handoff workflow instructions for saving and resuming long-running task handoffs, packaged as a Codex skill.
 - Handoff schema with objective provenance, original-objective preservation, goal alignment, context loading plan, and compression intent.
 - Helper scripts:
   - `create_handoff.py`

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a Codex task handoff."""
+"""Validate an AI coding-agent task handoff."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ REQUIRED_SECTIONS = [
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Validate a Codex task handoff.")
+    p = argparse.ArgumentParser(description="Validate an AI coding-agent task handoff.")
     p.add_argument("handoff", help="Path to latest.md or a handoff directory.")
     p.add_argument("--check-files", action="store_true", help="Check metadata file paths that are local to the workspace.")
     return p

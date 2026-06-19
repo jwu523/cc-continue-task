@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create or update a Codex task handoff."""
+"""Create or update an AI coding-agent task handoff."""
 
 from __future__ import annotations
 
@@ -177,13 +177,13 @@ def build_json(args: argparse.Namespace, workspace: Path, updated: str) -> dict:
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="Create or update a Codex task handoff.")
+    p = argparse.ArgumentParser(description="Create or update an AI coding-agent task handoff.")
     p.add_argument("--workspace", default=".", help="Workspace root. Defaults to current directory.")
     p.add_argument("--handoff-root", default=".codex/handoffs", help="Handoff root relative to workspace unless absolute.")
     p.add_argument("--task-id", help="Stable handoff id. Defaults to a slug of --title.")
     p.add_argument("--title", required=True, help="Human-readable task title.")
     p.add_argument("--status", default="in_progress", choices=["in_progress", "blocked", "complete", "paused"])
-    p.add_argument("--objective", "--goal", dest="objective", default="", help="Task objective. If omitted, the script uses --title as a generated objective fallback; Codex should pass a conversation-derived objective when possible.")
+    p.add_argument("--objective", "--goal", dest="objective", default="", help="Task objective. If omitted, the script uses --title as a generated objective fallback; agents should pass a conversation-derived objective when possible.")
     p.add_argument("--objective-source", choices=["user_specified", "generated", "inferred", "unknown"], help="Where the objective came from. Defaults to user_specified when --objective is set, otherwise generated.")
     p.add_argument("--original-objective", default="", help="Stable objective from the first handoff in a resumed task chain. Defaults to --objective.")
     p.add_argument("--goal-alignment", default="", help="Short assessment of whether this handoff still aligns with the original objective.")

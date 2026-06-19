@@ -1,11 +1,13 @@
 ---
 name: cc-continue-task
-description: Save and resume long-running Codex tasks across conversations while preserving the task objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads. Use when the user asks to checkpoint, hand off, inherit, continue, resume, preserve, or compress task context for a new conversation, especially for large coding, debugging, research, or operational tasks that would otherwise consume too much context, drift from the original goal, or risk stale reasoning.
+description: Save and resume long-running AI coding-agent tasks across conversations while preserving the task objective, controlling token use, reducing hallucination risk, and avoiding unnecessary project reloads. Use when the user asks to checkpoint, hand off, inherit, continue, resume, preserve, or compress task context for a new conversation, especially for large coding, debugging, research, or operational tasks in Codex, Claude Code, OpenCode, or similar agent tools that would otherwise consume too much context, drift from the original goal, or risk stale reasoning.
 ---
 
 # CC Continue Task
 
-Use this skill to create durable task handoffs and resume unfinished work from them. A handoff is evidence-backed task state written to disk so a future Codex conversation can continue without reloading the full prior conversation.
+Use this skill to create durable task handoffs and resume unfinished work from them. A handoff is evidence-backed task state written to disk so a future AI coding-agent conversation can continue without reloading the full prior conversation.
+
+This repository is packaged as a Codex skill, but the handoff format and helper scripts are agent-agnostic. They can be used with Codex, Claude Code, OpenCode, or any comparable coding agent that can read and write local files.
 
 ## Design Goals
 
@@ -55,7 +57,7 @@ When the user asks to save, checkpoint, hand off, or prepare for a new conversat
 15. After writing the handoff, run `scripts/make_resume_prompt.py` for the saved handoff and include the generated resume prompt in the response. This is part of the save workflow, not an optional follow-up.
 16. Explicitly tell the user the objective that was saved. If the objective was generated, say that it was generated and can be corrected.
 
-When using `scripts/create_handoff.py`, pass `--objective-source user_specified` if the user directly provided the objective. Pass `--objective-source generated` if Codex generated it from the conversation.
+When using `scripts/create_handoff.py`, pass `--objective-source user_specified` if the user directly provided the objective. Pass `--objective-source generated` if the agent generated it from the conversation.
 
 User-specified objective examples:
 
@@ -64,7 +66,7 @@ Use cc-continue-task to save state. Task objective: finish the MariaDB migration
 ```
 
 ```text
-Checkpoint this as: build a reusable skill for continuing long-running Codex tasks across conversations.
+Checkpoint this as: build a reusable workflow for continuing long-running AI coding tasks across conversations.
 ```
 
 Prefer a concise but complete handoff over a transcript-like dump. The goal is continuity, not conversation archival.

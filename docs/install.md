@@ -1,10 +1,10 @@
 # Install CC Continue Task
 
-This guide covers installing the skill, verifying that Codex can use it, and updating it later.
+This guide covers installing the Codex skill package, verifying the handoff workflow, and updating it later. The handoff format and scripts are usable with other AI coding agents as well.
 
 ## Skill Directory
 
-Install the repository under your Codex skills directory:
+For Codex, install the repository under your Codex skills directory:
 
 ```text
 <CODEX_HOME>/skills/cc-continue-task
@@ -24,7 +24,7 @@ Linux:   $HOME/.codex/skills/cc-continue-task
 git clone https://github.com/jwu523/cc-continue-task.git <CODEX_HOME>\skills\cc-continue-task
 ```
 
-For PowerShell on Windows, replace `<CODEX_HOME>` with your actual Codex home path.
+For PowerShell on Windows, replace `<CODEX_HOME>` with your actual Codex home path or chosen install path.
 
 ## Manual Install
 
@@ -32,9 +32,11 @@ For PowerShell on Windows, replace `<CODEX_HOME>` with your actual Codex home pa
 2. Place it at `<CODEX_HOME>/skills/cc-continue-task`.
 3. Restart Codex or reload skills if your Codex environment requires it.
 
+For Claude Code, OpenCode, or other agents, keep the repository wherever the agent can read and execute the helper scripts, then adapt `SKILL.md` into that agent's custom-instruction or workflow mechanism.
+
 ## Verify Installation
 
-Start a Codex conversation in any workspace and ask:
+Start an agent conversation in any workspace and ask:
 
 ```text
 Use cc-continue-task to checkpoint this.
@@ -42,11 +44,11 @@ Use cc-continue-task to checkpoint this.
 
 Expected behavior:
 
-- Codex selects the `cc-continue-task` skill.
-- If you did not specify an objective, Codex generates one from the conversation.
+- In Codex, the `cc-continue-task` skill is selected.
+- If you did not specify an objective, the agent generates one from the conversation.
 - A handoff is written under `.codex/handoffs/<task-id>/`.
-- Codex reports the saved objective after writing the handoff.
-- Codex prints a resume prompt generated from the saved handoff.
+- The agent reports the saved objective after writing the handoff.
+- The agent prints a resume prompt generated from the saved handoff.
 
 You can also verify the helper scripts directly:
 
@@ -63,7 +65,7 @@ After saving a handoff, the skill should print a prompt for the next conversatio
 python scripts/make_resume_prompt.py .codex/handoffs/<task-id>
 ```
 
-Paste the generated prompt into a new Codex conversation.
+Paste the generated prompt into a new agent conversation.
 
 ## Update
 

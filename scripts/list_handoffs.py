@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""List Codex task handoffs."""
+"""List AI coding-agent task handoffs."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="List Codex task handoffs.")
+    p = argparse.ArgumentParser(description="List AI coding-agent task handoffs.")
     p.add_argument("--workspace", default=".", help="Workspace root. Defaults to current directory.")
     p.add_argument("--handoff-root", default=".codex/handoffs", help="Handoff root relative to workspace unless absolute.")
     p.add_argument("--format", choices=["text", "json"], default="text")
