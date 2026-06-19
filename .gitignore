@@ -1,0 +1,29 @@
+# Generated handoffs and local workspace state
+.codex/
+.tmp-handoffs/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local configuration and secrets
+.env
+.env.*
+local-config.json
+*.local.json
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

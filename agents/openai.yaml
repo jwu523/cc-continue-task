@@ -1,0 +1,4 @@
+interface:
+  display_name: "CC Continue Task"
+  short_description: "Checkpoint and resume long-running Codex tasks."
+  default_prompt: "Use $cc-continue-task to save or resume a long-running task handoff."
