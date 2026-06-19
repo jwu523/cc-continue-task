@@ -62,6 +62,8 @@ Task objective: finish the refactor and verify the CLI still works.
 Use cc-continue-task to checkpoint this.
 ```
 
+保存完成后，skill 应该自动调用 `scripts/make_resume_prompt.py` 生成一段可直接复制到新对话的恢复提示，并把这段提示输出给用户。
+
 在新对话中恢复最近的 handoff：
 
 ```text
@@ -74,7 +76,7 @@ Use cc-continue-task to resume the latest handoff for this workspace.
 Use cc-continue-task to resume .codex/handoffs/my-task/latest.md.
 ```
 
-保存 handoff 后，也可以先生成一段可直接复制到新对话的恢复提示：
+保存 handoff 后，也可以手动重新生成这段恢复提示：
 
 ```powershell
 python scripts/make_resume_prompt.py .codex/handoffs/my-task
@@ -116,6 +118,8 @@ python scripts/create_handoff.py `
   --must-read "latest.md" `
   --print-path
 ```
+
+不传 `--print-path` 时，`create_handoff.py` 会输出已保存目标，并附带基于新 handoff 生成的恢复提示。需要脚本只拿 Markdown 路径时，再使用 `--print-path`。
 
 列出 handoff：
 

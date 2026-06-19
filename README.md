@@ -62,6 +62,8 @@ If you do not provide an objective, the skill should generate one from the conve
 Use cc-continue-task to checkpoint this.
 ```
 
+After saving, the skill should automatically generate a ready-to-paste resume prompt with `scripts/make_resume_prompt.py` and include it in the response.
+
 Resume from a saved handoff in a new conversation:
 
 ```text
@@ -74,7 +76,7 @@ Or point to a specific handoff:
 Use cc-continue-task to resume .codex/handoffs/my-task/latest.md.
 ```
 
-You can also generate a ready-to-paste resume prompt:
+You can also regenerate the resume prompt manually:
 
 ```powershell
 python scripts/make_resume_prompt.py .codex/handoffs/my-task
@@ -116,6 +118,8 @@ python scripts/create_handoff.py `
   --must-read "latest.md" `
   --print-path
 ```
+
+Without `--print-path`, `create_handoff.py` prints the saved objective and a resume prompt generated from the new handoff. Keep `--print-path` for scripting when you only want the Markdown path.
 
 List handoffs:
 

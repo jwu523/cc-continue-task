@@ -14,6 +14,7 @@ Initial public release.
   - `validate_handoff.py`
   - `sanitize_handoff.py`
   - `make_resume_prompt.py`
+- Automatic resume prompt output after handoff creation.
 - Sanitized examples for basic saves, generated objectives, and objective drift.
 - Dependency-free unit tests.
 - GitHub Actions CI.

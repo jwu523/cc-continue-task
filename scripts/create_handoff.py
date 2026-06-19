@@ -10,6 +10,8 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
+from make_resume_prompt import build_prompt
+
 
 REQUIRED_SECTIONS = [
     "Objective",
@@ -249,6 +251,9 @@ def main() -> int:
         print(f"Wrote checkpoint: {checkpoint_md}")
         print(f"Saved objective ({args.objective_source}): {args.objective}")
         print(f"Original objective: {args.original_objective}")
+        print()
+        print("Resume prompt:")
+        print(build_prompt(latest_md, metadata, include_next_steps=True), end="")
     return 0
 
 

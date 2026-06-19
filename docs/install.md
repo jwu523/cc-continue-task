@@ -46,6 +46,7 @@ Expected behavior:
 - If you did not specify an objective, Codex generates one from the conversation.
 - A handoff is written under `.codex/handoffs/<task-id>/`.
 - Codex reports the saved objective after writing the handoff.
+- Codex prints a resume prompt generated from the saved handoff.
 
 You can also verify the helper scripts directly:
 
@@ -56,7 +57,7 @@ python scripts/list_handoffs.py --workspace .
 
 ## Resume From A New Conversation
 
-After saving a handoff, generate a prompt for the next conversation:
+After saving a handoff, the skill should print a prompt for the next conversation automatically. You can regenerate it manually:
 
 ```powershell
 python scripts/make_resume_prompt.py .codex/handoffs/<task-id>

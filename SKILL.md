@@ -52,7 +52,8 @@ When the user asks to save, checkpoint, hand off, or prepare for a new conversat
 12. End with concrete `Resume Instructions` that a new conversation can execute directly.
 13. Use `scripts/create_handoff.py` when useful to create `latest.md`, `handoff.json`, and checkpoint history.
 14. Run `scripts/validate_handoff.py` before reporting success when time allows.
-15. After writing the handoff, explicitly tell the user the objective that was saved. If the objective was generated, say that it was generated and can be corrected.
+15. After writing the handoff, run `scripts/make_resume_prompt.py` for the saved handoff and include the generated resume prompt in the response. This is part of the save workflow, not an optional follow-up.
+16. Explicitly tell the user the objective that was saved. If the objective was generated, say that it was generated and can be corrected.
 
 When using `scripts/create_handoff.py`, pass `--objective-source user_specified` if the user directly provided the objective. Pass `--objective-source generated` if Codex generated it from the conversation.
 
@@ -110,6 +111,7 @@ Keep previous checkpoint files. Do not overwrite history unless the user explici
 
 - `scripts/create_handoff.py`: create or update a task handoff with Markdown, JSON metadata, and checkpoint history.
 - `scripts/list_handoffs.py`: list known handoffs under a workspace.
+- `scripts/make_resume_prompt.py`: generate a ready-to-paste prompt for resuming a handoff in a new conversation.
 - `scripts/validate_handoff.py`: check required sections and referenced file existence.
 
 ## Reference

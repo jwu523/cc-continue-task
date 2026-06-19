@@ -61,6 +61,9 @@ class HandoffScriptTests(unittest.TestCase):
             )
 
             self.assertEqual(result.returncode, 0, result.stdout)
+            self.assertIn("Saved objective (user_specified): Finish the demo task and verify the result.", result.stdout)
+            self.assertIn("Resume prompt:", result.stdout)
+            self.assertIn("Use cc-continue-task to resume this handoff:", result.stdout)
             handoff_dir = workspace / ".codex" / "handoffs" / "demo-task"
             self.assertTrue((handoff_dir / "latest.md").exists())
             self.assertTrue((handoff_dir / "handoff.json").exists())
