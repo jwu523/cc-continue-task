@@ -12,7 +12,10 @@
 
 - `SKILL.md`：skill 说明和操作规则。
 - `agents/openai.yaml`：Codex agent 元数据。
+- `CHANGELOG.md`：版本变更记录。
+- `CONTRIBUTING.md`：贡献说明。
 - `docs/install.md`：详细安装、验证和更新说明。
+- `docs/demo.md`：从保存到恢复的完整演示流程。
 - `examples/`：脱敏后的示例 handoff，覆盖常见继续任务场景。
 - `references/handoff-schema.md`：handoff Markdown 和 JSON 的结构说明。
 - `scripts/create_handoff.py`：创建或更新 handoff。
@@ -20,7 +23,16 @@
 - `scripts/make_resume_prompt.py`：为新对话生成恢复提示。
 - `scripts/sanitize_handoff.py`：扫描 handoff 中的密钥和环境相关信息。
 - `scripts/validate_handoff.py`：在恢复或共享前校验 handoff。
+- `SECURITY.md`：敏感数据处理和安全报告说明。
 - `tests/`：不依赖第三方包的辅助脚本测试。
+
+## 文档
+
+- [安装说明](docs/install.md)
+- [演示流程](docs/demo.md)
+- [Release Notes](docs/releases/v0.1.0.md)
+- [贡献说明](CONTRIBUTING.md)
+- [安全策略](SECURITY.md)
 
 ## 安装
 

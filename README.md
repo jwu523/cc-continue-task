@@ -12,7 +12,10 @@ Save and resume long-running Codex tasks across conversations while preserving t
 
 - `SKILL.md`: skill instructions and operating rules.
 - `agents/openai.yaml`: Codex agent metadata.
+- `CHANGELOG.md`: release history.
+- `CONTRIBUTING.md`: contribution guidelines.
 - `docs/install.md`: detailed installation, verification, and update guide.
+- `docs/demo.md`: end-to-end save and resume walkthrough.
 - `examples/`: sanitized example handoffs for common continuation scenarios.
 - `references/handoff-schema.md`: expected handoff Markdown and JSON structure.
 - `scripts/create_handoff.py`: create or update a handoff.
@@ -20,7 +23,16 @@ Save and resume long-running Codex tasks across conversations while preserving t
 - `scripts/make_resume_prompt.py`: generate a prompt for resuming a handoff in a new conversation.
 - `scripts/sanitize_handoff.py`: scan handoff files for secrets and environment-specific data.
 - `scripts/validate_handoff.py`: validate a handoff before relying on it.
+- `SECURITY.md`: sensitive-data handling and reporting guidance.
 - `tests/`: dependency-free unit tests for the helper scripts.
+
+## Documentation
+
+- [Install Guide](docs/install.md)
+- [Demo Workflow](docs/demo.md)
+- [Release Notes](docs/releases/v0.1.0.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security Policy](SECURITY.md)
 
 ## Install
 
