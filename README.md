@@ -10,6 +10,14 @@ Save and resume long-running AI coding-agent tasks across conversations while pr
 
 It writes a durable handoff artifact to disk so a new conversation can continue from verified task state instead of relying on a long chat transcript.
 
+## At A Glance
+
+- Works as a Codex skill, or as an agent-agnostic handoff schema plus helper scripts for Claude Code, OpenCode, and similar file-oriented agents.
+- Saves a verified handoff file and prints a ready-to-paste resume prompt for the next conversation.
+- Uses a quality gate to preserve important state and ask before dropping or compressing uncertain context.
+
+Typical flow: save a handoff -> copy the generated resume prompt -> start a new conversation -> resume from verified state -> keep the Original Objective stable on the next save.
+
 ## Repository Layout
 
 - `SKILL.md`: skill instructions and operating rules.
