@@ -16,6 +16,14 @@ Improve the demo dashboard table layout and verify it remains readable on deskto
 
 The generated objective matches the current conversation content. The user did not provide a formal objective, so this should be confirmed if the next work becomes broad.
 
+## Handoff Quality Gate
+
+The handoff is usable, but objective confidence is lower because the user did not explicitly state a formal objective.
+
+### Needs User Confirmation
+
+- Confirm the generated objective if the next request broadens beyond dashboard table layout.
+
 ## Current State
 
 The table layout was tightened for desktop. Mobile overflow handling still needs verification.
@@ -96,6 +104,20 @@ The table layout was tightened for desktop. Mobile overflow handling still needs
 
 - Mobile screenshot or viewport check.
 - Lint status.
+
+## Omitted Or Compressed Context
+
+### Compressed
+
+- Visual brainstorming was reduced to the final layout decisions that affected implementation.
+
+### Dropped
+
+- Draft wording that did not affect table behavior was omitted.
+
+### User-Confirmed Omissions
+
+- None recorded.
 
 ## Resume Instructions
 

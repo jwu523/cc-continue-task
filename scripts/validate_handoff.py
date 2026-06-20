@@ -12,6 +12,7 @@ from pathlib import Path
 REQUIRED_SECTIONS = [
     "Objective",
     "Goal Alignment",
+    "Handoff Quality Gate",
     "Current State",
     "Completed",
     "In Progress",
@@ -25,6 +26,7 @@ REQUIRED_SECTIONS = [
     "Open Questions",
     "User Constraints",
     "Compression Intent",
+    "Omitted Or Compressed Context",
     "Resume Instructions",
 ]
 
@@ -80,6 +82,12 @@ def main() -> int:
                 errors.append("Missing metadata field: original_objective")
             if not str(metadata.get("goal_alignment", "")).strip():
                 warnings.append("Missing metadata field: goal_alignment")
+            if "quality_gate" not in metadata:
+                warnings.append("Missing metadata field: quality_gate")
+            if "confirmation_needed" not in metadata:
+                warnings.append("Missing metadata field: confirmation_needed")
+            if "omitted_or_compressed_context" not in metadata:
+                warnings.append("Missing metadata field: omitted_or_compressed_context")
 
     if args.check_files and metadata:
         workspace = Path(str(metadata.get("workspace", "")))

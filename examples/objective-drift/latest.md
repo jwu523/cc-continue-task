@@ -16,6 +16,14 @@ Review a proposed export redesign that came up while fixing the CSV import crash
 
 The current objective has materially drifted from the original objective. The original task was to fix a CSV import crash and add a regression test. Export redesign is a different task. Save a new handoff for the redesign unless the user explicitly replaces the original objective.
 
+## Handoff Quality Gate
+
+Do not silently save export redesign details into the original import-bug handoff. User confirmation is needed before omitting the export discussion or splitting it into a new handoff.
+
+### Needs User Confirmation
+
+- Should the next handoff continue the CSV import bug objective, or should export redesign be saved as a separate handoff?
+
 ## Current State
 
 The import crash was investigated, but the conversation moved into export redesign before the regression test was added.
@@ -96,6 +104,20 @@ The import crash was investigated, but the conversation moved into export redesi
 
 - Whether the import regression test exists.
 - User's intended objective for the next step.
+
+## Omitted Or Compressed Context
+
+### Compressed
+
+- Export redesign discussion is summarized only as objective drift until the user confirms it should become a separate task.
+
+### Dropped
+
+- None recorded.
+
+### User-Confirmed Omissions
+
+- None recorded; confirmation is still needed.
 
 ## Resume Instructions
 

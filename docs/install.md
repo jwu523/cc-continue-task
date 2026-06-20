@@ -46,6 +46,7 @@ Expected behavior:
 
 - In Codex, the `cc-continue-task` skill is selected.
 - If you did not specify an objective, the agent generates one from the conversation.
+- If the save scope is ambiguous, the agent asks what to preserve, compress, or drop before writing the handoff.
 - A handoff is written under `.codex/handoffs/<task-id>/`.
 - The agent reports the saved objective after writing the handoff.
 - The agent prints a resume prompt generated from the saved handoff.

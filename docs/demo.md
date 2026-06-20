@@ -13,6 +13,7 @@ Task objective: finish the CLI parser refactor and verify existing commands stil
 
 Expected result:
 
+- If important details are ambiguous, the agent asks you to confirm what should be preserved, compressed, or dropped before writing the final handoff.
 - A handoff is written under `.codex/handoffs/<task-id>/`.
 - The saved objective is printed.
 - A resume prompt is printed automatically.
@@ -36,6 +37,7 @@ The agent should:
 
 - read `latest.md`
 - follow the `Context Loading Plan`
+- respect `Handoff Quality Gate` and `Omitted Or Compressed Context`
 - verify cheap drift-prone facts
 - continue from `Next Steps`
 - preserve the `Original Objective` on the next save

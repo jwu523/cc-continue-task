@@ -36,6 +36,55 @@ Default to the current workspace:
 
 Use a different location only when the user asks.
 
+## Handoff Quality Gate
+
+Before writing a handoff, decide whether the save can be accurate without user confirmation.
+
+Always preserve:
+
+- User-stated objective and `Original Objective`.
+- Current state, completed work, in-progress work, and next steps.
+- Files, artifacts, commands, results, and evidence that affect continuation.
+- User constraints, blockers, risks, assumptions, open questions, and decisions that affect future work.
+- Context loading boundaries: what to read, defer, and avoid reloading.
+
+Compress when the detail is useful but too large:
+
+- Superseded explorations.
+- Failed attempts that explain current direction.
+- Tool setup or permission debugging that only matters through its final outcome.
+- Background discussion that affected a decision but not the next action.
+
+Drop only when the detail is clearly irrelevant:
+
+- Small talk, repeated explanations, and duplicated outputs.
+- Temporary errors with no lasting effect.
+- Branches explicitly abandoned by the user or made irrelevant by later decisions.
+
+Ask the user before saving when any of these are true:
+
+- The objective, current state, next step, or stopping point is ambiguous.
+- Multiple active subgoals exist and it is unclear which should control the next conversation.
+- The conversation is long enough that important details may be lost during compression.
+- A detail may affect code, business logic, user constraints, permissions, or future decisions, but would be expensive to preserve fully.
+- The user said or implied that details should not be lost.
+- You are about to drop or heavily compress material that might still matter.
+
+When confirmation is needed, present a concrete compression plan instead of asking a vague question:
+
+```text
+I can save the handoff, but these details need confirmation before I omit or compress them:
+
+- Keep: A, B, C.
+- Compress: D into one sentence because it only explains why approach X was rejected.
+- Drop: E and F because they were temporary setup noise.
+- Unclear: G may affect the next implementation step.
+
+Please confirm whether G should be preserved, compressed, or omitted.
+```
+
+Record the result in `Handoff Quality Gate` and `Omitted Or Compressed Context`.
+
 ## Create A Handoff
 
 When the user asks to save, checkpoint, hand off, or prepare for a new conversation:
@@ -45,17 +94,19 @@ When the user asks to save, checkpoint, hand off, or prepare for a new conversat
 3. If the conversation began casually and the objective only became clear later, prefer the later explicit objective over earlier exploratory wording.
 4. Record `Original Objective`. For a new handoff, this is the same as `Objective`; for a resumed handoff, preserve the original objective from the loaded state.
 5. Add `Goal Alignment` explaining whether the saved state still fits the original objective.
-6. Inspect local state cheaply: workspace path, `git status --short`, branch, and relevant files already known from the task.
-7. Write only evidence-backed state under `Verified Facts`.
-8. Put guesses under `Assumptions`; put unknowns under `Open Questions`.
-9. Include exact paths, commands, results, blockers, approvals, and user constraints that affect continuation.
-10. Add a `Context Loading Plan` with `Must Read`, `Read Only If Needed`, and `Do Not Reload Unless Mismatch`.
-11. Add a `Compression Intent` with `Preserve`, `Drop`, and `Revalidate`.
-12. End with concrete `Resume Instructions` that a new conversation can execute directly.
-13. Use `scripts/create_handoff.py` when useful to create `latest.md`, `handoff.json`, and checkpoint history.
-14. Run `scripts/validate_handoff.py` before reporting success when time allows.
-15. After writing the handoff, run `scripts/make_resume_prompt.py` for the saved handoff and include the generated resume prompt in the response. This is part of the save workflow, not an optional follow-up.
-16. Explicitly tell the user the objective that was saved. If the objective was generated, say that it was generated and can be corrected.
+6. Run the Handoff Quality Gate. If important save-scope details are uncertain, ask the user to confirm the compression plan before writing the handoff.
+7. Inspect local state cheaply: workspace path, `git status --short`, branch, and relevant files already known from the task.
+8. Write only evidence-backed state under `Verified Facts`.
+9. Put guesses under `Assumptions`; put unknowns under `Open Questions`.
+10. Include exact paths, commands, results, blockers, approvals, and user constraints that affect continuation.
+11. Add a `Context Loading Plan` with `Must Read`, `Read Only If Needed`, and `Do Not Reload Unless Mismatch`.
+12. Add a `Compression Intent` with `Preserve`, `Drop`, and `Revalidate`.
+13. Add `Omitted Or Compressed Context` with `Compressed`, `Dropped`, and `User-Confirmed Omissions`.
+14. End with concrete `Resume Instructions` that a new conversation can execute directly.
+15. Use `scripts/create_handoff.py` when useful to create `latest.md`, `handoff.json`, and checkpoint history.
+16. Run `scripts/validate_handoff.py` before reporting success when time allows.
+17. After writing the handoff, run `scripts/make_resume_prompt.py` for the saved handoff and include the generated resume prompt in the response. This is part of the save workflow, not an optional follow-up.
+18. Explicitly tell the user the objective that was saved. If the objective was generated, say that it was generated and can be corrected.
 
 When using `scripts/create_handoff.py`, pass `--objective-source user_specified` if the user directly provided the objective. Pass `--objective-source generated` if the agent generated it from the conversation.
 

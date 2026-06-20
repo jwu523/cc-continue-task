@@ -42,6 +42,8 @@ class HandoffScriptTests(unittest.TestCase):
                 "user_specified",
                 "--goal-alignment",
                 "The state is aligned with the objective.",
+                "--quality-gate",
+                "No unresolved save-scope uncertainty remains.",
                 "--current-state",
                 "A test handoff is being generated.",
                 "--completed",
@@ -56,6 +58,10 @@ class HandoffScriptTests(unittest.TestCase):
                 "Transcript detail.",
                 "--revalidate",
                 "Current git status.",
+                "--compressed-context",
+                "Early discussion was summarized into the final objective.",
+                "--dropped-context",
+                "Temporary setup noise was omitted.",
                 "--resume-instruction",
                 "Run the validator.",
             )
@@ -67,6 +73,15 @@ class HandoffScriptTests(unittest.TestCase):
             handoff_dir = workspace / ".codex" / "handoffs" / "demo-task"
             self.assertTrue((handoff_dir / "latest.md").exists())
             self.assertTrue((handoff_dir / "handoff.json").exists())
+            markdown = (handoff_dir / "latest.md").read_text(encoding="utf-8")
+            self.assertIn("## Handoff Quality Gate", markdown)
+            self.assertIn("## Omitted Or Compressed Context", markdown)
+            metadata = json.loads((handoff_dir / "handoff.json").read_text(encoding="utf-8"))
+            self.assertEqual(metadata["quality_gate"], "No unresolved save-scope uncertainty remains.")
+            self.assertEqual(
+                metadata["omitted_or_compressed_context"]["compressed"],
+                ["Early discussion was summarized into the final objective."],
+            )
 
             validate = run_script(str(VALIDATE_HANDOFF), str(handoff_dir))
             self.assertEqual(validate.returncode, 0, validate.stdout)

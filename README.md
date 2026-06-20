@@ -79,6 +79,8 @@ Use cc-continue-task to checkpoint this.
 
 After saving, the skill should automatically generate a ready-to-paste resume prompt with `scripts/make_resume_prompt.py` and include it in the response.
 
+Before saving, the skill should run a handoff quality gate. If it is not clear whether a detail can be safely omitted or compressed, it should ask the user with a concrete keep/compress/drop proposal instead of silently discarding context.
+
 Resume from a saved handoff in a new conversation:
 
 ```text
@@ -105,6 +107,18 @@ On later saves after a resume, the handoff should stay aligned with the original
 
 This prevents a long-running handoff from silently becoming a different task.
 
+## Save Quality Gate
+
+The handoff should preserve enough detail for a future agent conversation to continue without re-reading the full prior conversation.
+
+Preserve objective, current state, completed work, in-progress work, next steps, key files, commands, results, user constraints, risks, assumptions, open questions, and decisions that affect future work.
+
+Compress superseded exploration, failed attempts, setup debugging, and background discussion when only the final outcome matters.
+
+Drop small talk, repeated explanations, temporary errors with no lasting effect, and branches explicitly abandoned by the user.
+
+Ask the user before saving when the objective, current state, next step, or omission boundary is uncertain. Record the result in `Handoff Quality Gate` and `Omitted Or Compressed Context`.
+
 ## Handoff Files
 
 By default, handoffs are written under the current workspace:
@@ -128,8 +142,11 @@ python scripts/create_handoff.py `
   --title "Refactor CLI parser" `
   --objective "Finish the CLI parser refactor and verify existing commands still work." `
   --objective-source user_specified `
+  --quality-gate "No unresolved save-scope uncertainty remains." `
   --current-state "Parser split is implemented; tests still need to run." `
   --next-step "Run the focused CLI test suite." `
+  --compressed-context "Early parser alternatives were summarized as superseded exploration." `
+  --dropped-context "Repeated discussion about unchanged CLI commands was omitted." `
   --must-read "latest.md" `
   --print-path
 ```

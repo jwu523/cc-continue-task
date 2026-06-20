@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Handoff Quality Gate guidance for deciding what must be preserved, compressed, dropped, or confirmed with the user before saving.
+- `Omitted Or Compressed Context` handoff section with compressed, dropped, and user-confirmed omission records.
+- Script arguments for recording quality gate assessments and omitted or compressed context.
+
 ## v0.1.0 - 2026-06-20
 
 Initial public version.

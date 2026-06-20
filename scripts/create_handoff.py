@@ -16,6 +16,7 @@ from make_resume_prompt import build_prompt
 REQUIRED_SECTIONS = [
     "Objective",
     "Goal Alignment",
+    "Handoff Quality Gate",
     "Current State",
     "Completed",
     "In Progress",
@@ -29,6 +30,7 @@ REQUIRED_SECTIONS = [
     "Open Questions",
     "User Constraints",
     "Compression Intent",
+    "Omitted Or Compressed Context",
     "Resume Instructions",
 ]
 
@@ -100,6 +102,26 @@ def compression_intent(args: argparse.Namespace) -> str:
     ).strip()
 
 
+def quality_gate(args: argparse.Namespace) -> str:
+    return "\n".join(
+        [
+            text_block(args.quality_gate, "No unresolved save-scope uncertainty recorded."),
+            "",
+            subsection("Needs User Confirmation", bullet_list(args.confirmation_needed, "None recorded.")),
+        ]
+    ).strip()
+
+
+def omitted_or_compressed_context(args: argparse.Namespace) -> str:
+    return "\n".join(
+        [
+            subsection("Compressed", bullet_list(args.compressed_context, "None recorded.")),
+            subsection("Dropped", bullet_list(args.dropped_context, "None recorded.")),
+            subsection("User-Confirmed Omissions", bullet_list(args.user_confirmed_omission, "None recorded.")),
+        ]
+    ).strip()
+
+
 def build_markdown(args: argparse.Namespace, workspace: Path, updated: str) -> str:
     git_branch = run_git(workspace, ["branch", "--show-current"])
     git_status = run_git(workspace, ["status", "--short"])
@@ -120,6 +142,7 @@ def build_markdown(args: argparse.Namespace, workspace: Path, updated: str) -> s
 
     parts.append(section("Objective", text_block(args.objective)))
     parts.append(section("Goal Alignment", text_block(args.goal_alignment, "Not assessed.")))
+    parts.append(section("Handoff Quality Gate", quality_gate(args)))
     parts.append(section("Current State", text_block(args.current_state)))
     parts.append(section("Completed", bullet_list(args.completed)))
     parts.append(section("In Progress", bullet_list(args.in_progress)))
@@ -133,6 +156,7 @@ def build_markdown(args: argparse.Namespace, workspace: Path, updated: str) -> s
     parts.append(section("Open Questions", bullet_list(args.open_question)))
     parts.append(section("User Constraints", bullet_list(args.user_constraint)))
     parts.append(section("Compression Intent", compression_intent(args)))
+    parts.append(section("Omitted Or Compressed Context", omitted_or_compressed_context(args)))
     parts.append(section("Resume Instructions", bullet_list(args.resume_instruction)))
     parts.append(section("Workspace Snapshot", f"```text\n{git_status}\n```"))
 
@@ -153,6 +177,8 @@ def build_json(args: argparse.Namespace, workspace: Path, updated: str) -> dict:
         "objective_source": args.objective_source,
         "original_objective": args.original_objective,
         "goal_alignment": args.goal_alignment,
+        "quality_gate": args.quality_gate,
+        "confirmation_needed": args.confirmation_needed,
         "current_state": args.current_state,
         "next_steps": args.next_step,
         "files": args.file,
@@ -172,6 +198,11 @@ def build_json(args: argparse.Namespace, workspace: Path, updated: str) -> dict:
             "drop": args.drop,
             "revalidate": args.revalidate,
         },
+        "omitted_or_compressed_context": {
+            "compressed": args.compressed_context,
+            "dropped": args.dropped_context,
+            "user_confirmed_omissions": args.user_confirmed_omission,
+        },
         "resume_instructions": args.resume_instruction,
     }
 
@@ -187,6 +218,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--objective-source", choices=["user_specified", "generated", "inferred", "unknown"], help="Where the objective came from. Defaults to user_specified when --objective is set, otherwise generated.")
     p.add_argument("--original-objective", default="", help="Stable objective from the first handoff in a resumed task chain. Defaults to --objective.")
     p.add_argument("--goal-alignment", default="", help="Short assessment of whether this handoff still aligns with the original objective.")
+    p.add_argument("--quality-gate", default="", help="Assessment of whether the handoff captures the necessary task state without unresolved save-scope uncertainty.")
+    p.add_argument("--confirmation-needed", action="append", default=[], help="Point that should be confirmed with the user before omitting or compressing context.")
     p.add_argument("--current-state", default="")
     p.add_argument("--completed", action="append", default=[])
     p.add_argument("--in-progress", action="append", default=[])
@@ -204,6 +237,9 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--preserve", action="append", default=[], help="State, decision, or fact to preserve across conversations.")
     p.add_argument("--drop", action="append", default=[], help="Detail intentionally omitted to save context.")
     p.add_argument("--revalidate", action="append", default=[], help="Volatile fact to check cheaply before relying on it.")
+    p.add_argument("--compressed-context", action="append", default=[], help="Context intentionally compressed into a shorter summary.")
+    p.add_argument("--dropped-context", action="append", default=[], help="Context intentionally omitted because it is irrelevant or superseded.")
+    p.add_argument("--user-confirmed-omission", action="append", default=[], help="Context the user explicitly agreed can be omitted or compressed.")
     p.add_argument("--resume-instruction", action="append", default=[])
     p.add_argument("--notes", default="")
     p.add_argument("--print-path", action="store_true")

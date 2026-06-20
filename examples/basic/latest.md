@@ -16,6 +16,14 @@ Refactor the demo CLI parser and verify existing commands still work.
 
 Current work is aligned with the original objective. The parser split is implemented, and the remaining work is verification.
 
+## Handoff Quality Gate
+
+No unresolved save-scope uncertainty recorded. The objective, current state, changed files, commands, and next steps are all clear.
+
+### Needs User Confirmation
+
+- None recorded.
+
 ## Current State
 
 The parser has been split into a dedicated module. Command handlers still call the same public entrypoints.
@@ -100,6 +108,20 @@ The parser has been split into a dedicated module. Command handlers still call t
 
 - Git status.
 - Focused CLI test results.
+
+## Omitted Or Compressed Context
+
+### Compressed
+
+- Early parser implementation alternatives were summarized as superseded exploration.
+
+### Dropped
+
+- Repeated discussion about unchanged CLI commands was omitted.
+
+### User-Confirmed Omissions
+
+- None recorded.
 
 ## Resume Instructions
 

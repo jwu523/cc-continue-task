@@ -20,6 +20,10 @@ Use this reference when creating, validating, or repairing a handoff.
 
 ## Goal Alignment
 
+## Handoff Quality Gate
+
+### Needs User Confirmation
+
 ## Current State
 
 ## Completed
@@ -58,6 +62,14 @@ Use this reference when creating, validating, or repairing a handoff.
 
 ### Revalidate
 
+## Omitted Or Compressed Context
+
+### Compressed
+
+### Dropped
+
+### User-Confirmed Omissions
+
 ## Resume Instructions
 ```
 
@@ -65,6 +77,7 @@ Section guidance:
 
 - `Objective`: current handoff objective. Preserve the user's explicit objective verbatim when one is provided. If the user did not provide one, generate a concise objective from the conversation and mark `Objective Source` as `generated`.
 - `Goal Alignment`: whether the current handoff content still supports `Original Objective`; include any drift and recommended action.
+- `Handoff Quality Gate`: whether the handoff captures the necessary state accurately. If any save-scope detail is uncertain, list it under `Needs User Confirmation` and ask before writing the final handoff.
 - `Current State`: short operational summary of where the task stands now.
 - `Completed`: work that is actually done.
 - `In Progress`: partially completed work and exact stopping point.
@@ -78,6 +91,7 @@ Section guidance:
 - `Open Questions`: questions that need user input or further inspection.
 - `User Constraints`: explicit user instructions, boundaries, preferences, or prohibited actions.
 - `Compression Intent`: what to preserve, what to intentionally drop, and what to revalidate because it can drift.
+- `Omitted Or Compressed Context`: what was intentionally summarized or omitted, including anything the user explicitly confirmed could be omitted or compressed.
 - `Resume Instructions`: the minimal verification and action sequence for the next AI coding-agent conversation.
 
 ## JSON Metadata
@@ -95,6 +109,8 @@ Section guidance:
   "objective_source": "user_specified",
   "original_objective": "Stable objective from the first handoff in this task chain",
   "goal_alignment": "Current state still supports the original objective.",
+  "quality_gate": "No unresolved save-scope uncertainty remains.",
+  "confirmation_needed": [],
   "next_steps": ["First executable step"],
   "files": ["relative/or/absolute/path"],
   "context_loading_plan": {
@@ -111,6 +127,11 @@ Section guidance:
     "preserve": ["State to carry forward"],
     "drop": ["Transcript detail or irrelevant exploration to discard"],
     "revalidate": ["Volatile fact to check cheaply on resume"]
+  },
+  "omitted_or_compressed_context": {
+    "compressed": ["Long discussion summarized into the final decision"],
+    "dropped": ["Setup noise with no continuing effect"],
+    "user_confirmed_omissions": ["User agreed to omit obsolete release discussion"]
   }
 }
 ```
@@ -126,6 +147,7 @@ A useful handoff lets a new conversation answer these questions within one minut
 - What files, commands, and facts are trustworthy?
 - What should be read immediately, deferred, or avoided?
 - What must not be changed or assumed?
+- What, if anything, did the user confirm can be omitted or compressed?
 - What information was intentionally compressed away?
 - What should the agent do next?
 
@@ -137,6 +159,7 @@ Avoid these failure modes:
 - Forcing the next conversation to re-scan the whole project.
 - Saying tests passed without command evidence.
 - Omitting user constraints that affect autonomy, permissions, or project boundaries.
+- Dropping or heavily compressing possibly important details without asking the user first.
 - Failing to distinguish a user-specified objective from a generated or inferred objective.
 - Overwriting the original objective after resume without explicit user confirmation.
 - Saving drifted work into the same handoff when a new handoff would be clearer.

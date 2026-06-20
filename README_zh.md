@@ -79,6 +79,8 @@ Use cc-continue-task to checkpoint this.
 
 保存完成后，skill 应该自动调用 `scripts/make_resume_prompt.py` 生成一段可直接复制到新对话的恢复提示，并把这段提示输出给用户。
 
+保存前，skill 应该先执行 handoff 质量门槛检查。如果不确定某个细节能否安全省略或压缩，它应该给出具体的保留/压缩/丢弃方案并向用户确认，而不是静默丢弃上下文。
+
 在新对话中恢复最近的 handoff：
 
 ```text
@@ -105,6 +107,18 @@ skill 会同时记录当前 `Objective` 和稳定的 `Original Objective`。
 
 这样可以避免一个长期 handoff 在多次保存后悄悄变成另一个任务。
 
+## 保存质量门槛
+
+handoff 应该保留足够细节，让下一次代理对话无需重读完整历史也能继续任务。
+
+必须保留目标、当前状态、已完成工作、进行中工作、下一步、关键文件、命令结果、用户约束、风险、假设、开放问题，以及会影响后续工作的决策。
+
+可以压缩已被取代的探索、失败尝试、工具安装/权限排查，以及只通过最终结论影响后续工作的背景讨论。
+
+可以丢弃闲聊、重复解释、没有持续影响的临时错误，以及用户已经明确放弃的分支。
+
+当目标、当前状态、下一步或省略边界不明确时，保存前必须向用户确认。确认结果应写入 `Handoff Quality Gate` 和 `Omitted Or Compressed Context`。
+
 ## Handoff 文件
 
 默认情况下，handoff 会写入当前工作空间：
@@ -128,8 +142,11 @@ python scripts/create_handoff.py `
   --title "Refactor CLI parser" `
   --objective "Finish the CLI parser refactor and verify existing commands still work." `
   --objective-source user_specified `
+  --quality-gate "No unresolved save-scope uncertainty remains." `
   --current-state "Parser split is implemented; tests still need to run." `
   --next-step "Run the focused CLI test suite." `
+  --compressed-context "Early parser alternatives were summarized as superseded exploration." `
+  --dropped-context "Repeated discussion about unchanged CLI commands was omitted." `
   --must-read "latest.md" `
   --print-path
 ```
