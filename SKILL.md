@@ -16,12 +16,19 @@ Optimize every handoff for these outcomes:
 - Context budget control: preserve the minimum task state needed to continue, not the full conversation.
 - Evidence-backed continuity: separate verified facts, assumptions, and open questions so future work does not rely on stale or invented state.
 - Objective continuity: keep resumed and later checkpointed work aligned to the original task objective unless the user explicitly changes direction.
+- Objective relevance noise control: omit or summarize conversation details that are unrelated or only weakly related to the active objective.
 - Project reload avoidance: name the exact files and commands needed next, and explicitly mark broad project areas that should not be reloaded unless a mismatch appears.
 - Resume actionability: make the next conversation able to act from the handoff within one minute, after only cheap verification.
 
 ## Core Rule
 
 Separate verified facts from assumptions. Do not present inferred, stale, or unverified state as current truth. On resume, verify cheap drift-prone facts before acting.
+
+## Save Trigger Rule
+
+Only write or refresh a handoff when the user explicitly asks to save, checkpoint, hand off, preserve state, or prepare a new conversation. Do not update or refresh a handoff just because work progressed, a milestone completed, tests changed, a blocker changed, the user gave a new constraint, or a normal response is being sent.
+
+After resuming from a handoff, use it as read-only task state while continuing the work. Mention that a new save is available only when it is useful; do not run `scripts/create_handoff.py`, overwrite `latest.md`, or create checkpoint files unless the user asks for a save.
 
 ## Storage
 
@@ -39,6 +46,13 @@ Use a different location only when the user asks.
 ## Handoff Quality Gate
 
 Before writing a handoff, decide whether the save can be accurate without user confirmation.
+
+Run the Objective Relevance Noise Filter before choosing what to preserve:
+
+- Keep details that directly affect the objective, next action, code behavior, user constraints, permissions, validation, or risk.
+- Compress weakly related details into a short note only when they explain why the current direction was chosen.
+- Drop unrelated side discussions, repeated status chatter, transient tool noise, abandoned branches, and implementation trivia that will not change the next conversation's choices.
+- If relevance is uncertain and the detail could affect future decisions, ask before dropping it and record the decision in `Omitted Or Compressed Context`.
 
 Always preserve:
 
@@ -105,10 +119,12 @@ When the user asks to save, checkpoint, hand off, or prepare for a new conversat
 14. End with concrete `Resume Instructions` that a new conversation can execute directly.
 15. Use `scripts/create_handoff.py` when useful to create `latest.md`, `handoff.json`, and checkpoint history.
 16. Run `scripts/validate_handoff.py` before reporting success when time allows.
-17. After writing the handoff, run `scripts/make_resume_prompt.py` for the saved handoff and include the generated resume prompt in the response. This is part of the save workflow, not an optional follow-up.
+17. After writing the handoff, run `scripts/make_resume_prompt.py` for the saved handoff and include the generated resume prompt in the response. Generate the prompt in the current conversation language when clear; otherwise let the script auto-detect from handoff metadata.
 18. Explicitly tell the user the objective that was saved. If the objective was generated, say that it was generated and can be corrected.
 
 When using `scripts/create_handoff.py`, pass `--objective-source user_specified` if the user directly provided the objective. Pass `--objective-source generated` if the agent generated it from the conversation.
+
+When the current conversation language is clear, pass `--conversation-language zh` or `--conversation-language en` so the printed resume prompt matches the user's language. If it is mixed or unclear, omit the flag and use the script's auto-detection.
 
 User-specified objective examples:
 
@@ -146,19 +162,22 @@ When the user asks to continue or inherit a saved task:
 8. Report mismatches briefly before making changes.
 9. Continue from `Next Steps`, preserving `User Constraints` and avoiding unrelated project reloads.
 10. On the next save, preserve `Original Objective`; do not let the new handoff drift into a different task without user confirmation.
-11. If the handoff is stale or incomplete, do the minimum new exploration needed and update the handoff after major progress.
+11. If the handoff is stale or incomplete, do the minimum new exploration needed and continue from the corrected state. Do not update the handoff unless the user explicitly asks to save.
 
 ## Maintain A Handoff
 
-For long tasks, refresh the handoff after meaningful milestones:
+For long tasks, maintain the handoff only in response to an explicit user save request.
+
+Treat these as useful moments to offer a save, not as permission to write one:
 
 - A feature or fix is implemented.
 - A test result changes the known state.
 - A blocker is removed or added.
 - The user gives a new constraint.
 - The next action changes materially.
+- The conversation has grown long enough that a checkpoint would reduce context risk.
 
-Keep previous checkpoint files. Do not overwrite history unless the user explicitly asks.
+When the user asks to save, keep previous checkpoint files. Do not overwrite history unless the user explicitly asks.
 
 ## Scripts
 

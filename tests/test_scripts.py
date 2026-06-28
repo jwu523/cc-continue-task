@@ -13,6 +13,7 @@ CREATE_HANDOFF = REPO_ROOT / "scripts" / "create_handoff.py"
 MAKE_RESUME_PROMPT = REPO_ROOT / "scripts" / "make_resume_prompt.py"
 VALIDATE_HANDOFF = REPO_ROOT / "scripts" / "validate_handoff.py"
 SANITIZE_HANDOFF = REPO_ROOT / "scripts" / "sanitize_handoff.py"
+SKILL_MD = REPO_ROOT / "SKILL.md"
 
 
 def run_script(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -92,6 +93,49 @@ class HandoffScriptTests(unittest.TestCase):
             self.assertIn("Original objective: Finish the demo task and verify the result.", prompt.stdout)
             self.assertIn("Objective source: user_specified", prompt.stdout)
             self.assertIn("1. Validate generated handoff.", prompt.stdout)
+
+    def test_resume_prompt_matches_chinese_handoff_language(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            handoff_dir = Path(tmp) / "handoff"
+            handoff_dir.mkdir()
+            latest_md = handoff_dir / "latest.md"
+            latest_md.write_text("# 中文任务\n", encoding="utf-8")
+            (handoff_dir / "handoff.json").write_text(
+                json.dumps(
+                    {
+                        "objective": "继续优化交接保存流程。",
+                        "original_objective": "继续优化交接保存流程。",
+                        "objective_source": "user_specified",
+                        "goal_alignment": "当前状态仍然符合原始目标。",
+                        "status": "in_progress",
+                        "next_steps": ["先读取 SKILL.md。"],
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_script(str(MAKE_RESUME_PROMPT), str(handoff_dir))
+
+            self.assertEqual(result.returncode, 0, result.stdout)
+            self.assertIn("使用 cc-continue-task 继续这个交接：", result.stdout)
+            self.assertIn("已知交接元数据：", result.stdout)
+            self.assertIn("后续步骤（来自 handoff.json）：", result.stdout)
+            self.assertNotIn("Use cc-continue-task to resume this handoff:", result.stdout)
+
+    def test_skill_requires_objective_relevance_noise_filter(self) -> None:
+        skill_text = SKILL_MD.read_text(encoding="utf-8").lower()
+
+        self.assertIn("objective relevance noise filter", skill_text)
+        self.assertIn("conversation language", skill_text)
+
+    def test_skill_updates_handoff_only_on_explicit_save_request(self) -> None:
+        skill_text = SKILL_MD.read_text(encoding="utf-8").lower()
+
+        self.assertIn("only write or refresh a handoff when the user explicitly asks", skill_text)
+        self.assertIn("do not update or refresh a handoff just because", skill_text)
+        self.assertNotIn("refresh the handoff after meaningful milestones", skill_text)
+        self.assertNotIn("update the handoff after major progress", skill_text)
 
     def test_validate_rejects_missing_required_section(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -108,6 +108,7 @@ Section guidance:
   "objective": "One sentence final objective",
   "objective_source": "user_specified",
   "original_objective": "Stable objective from the first handoff in this task chain",
+  "conversation_language": "auto",
   "goal_alignment": "Current state still supports the original objective.",
   "quality_gate": "No unresolved save-scope uncertainty remains.",
   "confirmation_needed": [],
@@ -161,5 +162,6 @@ Avoid these failure modes:
 - Omitting user constraints that affect autonomy, permissions, or project boundaries.
 - Dropping or heavily compressing possibly important details without asking the user first.
 - Failing to distinguish a user-specified objective from a generated or inferred objective.
+- Generating the new-conversation resume prompt in a different language from the current conversation when the language is clear.
 - Overwriting the original objective after resume without explicit user confirmation.
 - Saving drifted work into the same handoff when a new handoff would be clearer.

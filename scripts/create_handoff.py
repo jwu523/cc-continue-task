@@ -176,6 +176,7 @@ def build_json(args: argparse.Namespace, workspace: Path, updated: str) -> dict:
         "objective": args.objective,
         "objective_source": args.objective_source,
         "original_objective": args.original_objective,
+        "conversation_language": args.conversation_language,
         "goal_alignment": args.goal_alignment,
         "quality_gate": args.quality_gate,
         "confirmation_needed": args.confirmation_needed,
@@ -217,6 +218,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--objective", "--goal", dest="objective", default="", help="Task objective. If omitted, the script uses --title as a generated objective fallback; agents should pass a conversation-derived objective when possible.")
     p.add_argument("--objective-source", choices=["user_specified", "generated", "inferred", "unknown"], help="Where the objective came from. Defaults to user_specified when --objective is set, otherwise generated.")
     p.add_argument("--original-objective", default="", help="Stable objective from the first handoff in a resumed task chain. Defaults to --objective.")
+    p.add_argument("--conversation-language", choices=["auto", "en", "zh"], default="auto", help="Language to use for the generated resume prompt. Defaults to auto-detection from handoff metadata.")
     p.add_argument("--goal-alignment", default="", help="Short assessment of whether this handoff still aligns with the original objective.")
     p.add_argument("--quality-gate", default="", help="Assessment of whether the handoff captures the necessary task state without unresolved save-scope uncertainty.")
     p.add_argument("--confirmation-needed", action="append", default=[], help="Point that should be confirmed with the user before omitting or compressing context.")
@@ -289,7 +291,7 @@ def main() -> int:
         print(f"Original objective: {args.original_objective}")
         print()
         print("Resume prompt:")
-        print(build_prompt(latest_md, metadata, include_next_steps=True), end="")
+        print(build_prompt(latest_md, metadata, include_next_steps=True, language=args.conversation_language), end="")
     return 0
 
 
